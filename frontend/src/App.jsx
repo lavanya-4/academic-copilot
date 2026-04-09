@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import "./App.css";
+import { FiPaperclip, FiMic, FiSend } from "react-icons/fi";
 
 function App() {
   const [input, setInput] = useState("");
@@ -24,11 +25,13 @@ function App() {
 
       const botMsg = {
         type: "bot",
-        text: data.response ? data.response.split("\n") : ["No response"],
+        text: data.response
+          ? data.response.split("\n")
+          : ["No response"],
       };
 
       setMessages((prev) => [...prev, userMsg, botMsg]);
-    } catch (error) {
+    } catch {
       setMessages((prev) => [
         ...prev,
         userMsg,
@@ -39,17 +42,16 @@ function App() {
     setInput("");
   };
 
-  // auto scroll
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
   return (
     <div className="page">
-      <div className="card">
-        <h2 className="title">🎓 Academic Copilot</h2>
+      <div className="centerContent">
+        <h1 className="bigTitle">SJSU COPILOT</h1>
 
-        <div className="chatBox">
+        <div className="chatArea">
           {messages.map((msg, i) => (
             <div
               key={i}
@@ -57,29 +59,30 @@ function App() {
             >
               {Array.isArray(msg.text)
                 ? msg.text.map((line, idx) => (
-                    <div key={idx} className="line">
-                      {line}
-                    </div>
+                    <div key={idx}>{line}</div>
                   ))
                 : msg.text}
             </div>
           ))}
           <div ref={chatEndRef} />
         </div>
+      </div>
 
-        <div className="inputBox">
-          <input
-            className="input"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            placeholder="Ask about office hours..."
-            onKeyDown={(e) => e.key === "Enter" && sendMessage()}
-          />
+      <div className="inputContainer">
+        <FiPaperclip className="icon" />
 
-          <button className="button" onClick={sendMessage}>
-            Send
-          </button>
-        </div>
+        <input
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          placeholder="Send a message..."
+          onKeyDown={(e) => e.key === "Enter" && sendMessage()}
+        />
+
+        <FiMic className="icon" />
+
+        <button className="sendBtn" onClick={sendMessage}>
+          <FiSend />
+        </button>
       </div>
     </div>
   );
